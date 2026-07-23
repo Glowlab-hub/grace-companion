@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g fill="none" stroke="%2366715F" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"><path d="M50 22V80"/><path d="M34 42H66"/><path d="M50 60C60 60 66 54 66 44 56 44 50 50 50 60Z"/></g></svg>' />
+<title>Grace Companion — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --background:#F7F3EA; --surface:#FFFDF8; --surface-muted:#F1EBDF;
+  --primary:#66715F; --primary-hover:#59634F; --primary-pressed:#4F5A49; --primary-light:#DDE4D9;
+  --secondary:#9BA895; --accent:#C98F72;
+  --text-primary:#403A34; --text-secondary:#746C64; --text-muted:#9A9187;
+  --border:#DDD5C9; --divider:#E7E0D4; --success:#6F8A68; --error:#A76C65;
+  --focus:#66715F;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#e9e3d6;color:var(--text-primary);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+body{display:flex;justify-content:center;padding:24px 12px;min-height:100vh}
+.phone{width:100%;max-width:420px;background:var(--background);border-radius:32px;box-shadow:0 20px 60px rgba(64,58,52,.22);overflow:hidden;position:relative;min-height:760px;display:flex;flex-direction:column}
+.screen{flex:1;padding:24px 20px 96px;display:none;animation:fade .28s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h1,h2,.serif{font-family:'Fraunces',serif}
+.wordmark{display:flex;align-items:center;gap:8px;font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:var(--primary);margin-bottom:20px}
+.h1{font-family:'Fraunces',serif;font-weight:600;font-size:28px;line-height:34px;letter-spacing:-.3px;margin-bottom:8px}
+.h2{font-family:'Fraunces',serif;font-weight:600;font-size:22px;line-height:28px;margin:6px 0}
+.sub{color:var(--text-secondary);font-size:15px;line-height:22px}
+.label{font-size:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-muted)}
+.section-t{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:22px 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chiprow{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);
+  border-radius:999px;padding:9px 14px;font-size:14px;font-weight:500;cursor:pointer;white-space:nowrap;transition:.15s;flex:0 0 auto}
+.chip:hover{background:var(--surface-muted)}
+.chip.sel{background:var(--primary-light);border-color:var(--primary);color:var(--text-primary)}
+.chip svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6;opacity:.85}
+/* ---- refined landing mood selector (Lucide line icons) ---- */
+.mood-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mood-chip{display:flex;align-items:center;gap:12px;height:52px;padding:0 16px;border-radius:12px;
+  background:#FFFDF8;border:1px solid #DDD5C9;color:#6F6861;font:inherit;font-size:15px;font-weight:500;
+  text-align:left;cursor:pointer;transition:.15s}
+.mood-chip svg{width:20px;height:20px;stroke:#8B857D;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.mood-chip:hover{background:#F7F3EA}
+.mood-chip.sel{background:#DDE4D9;border-color:#66715F;color:#403A34}
+.mood-chip.sel svg{stroke:#596653}
+/* ---- refined CTA states ---- */
+#email-btn{background:#E8E1D5;color:#A49C91;border:1px solid transparent}
+#email-btn:enabled{background:#A9B8A3;color:#2F3A2D;border:1px solid #879B81;cursor:pointer}
+#email-btn:enabled:hover{background:#98AA92}
+#email-btn:enabled:active{background:#879B81;color:#FFFDF8}
+.card{background:var(--surface);border-radius:16px;padding:20px;box-shadow:0 4px 12px rgba(64,58,52,.08);margin-bottom:16px;position:relative;overflow:hidden}
+.card .leaf-accent{position:absolute;right:-8px;top:-10px;width:64px;height:64px;opacity:.14;color:var(--secondary);pointer-events:none}
+.verse{font-family:'Fraunces',serif;font-style:italic;font-size:20px;line-height:32px;border-left:2px solid var(--secondary);padding-left:14px;margin:8px 0;color:var(--text-primary)}
+.divider{height:1px;background:var(--divider);margin:14px 0}
+.key{font-size:15px;color:var(--text-secondary);line-height:22px}
+.prayer{font-size:16px;line-height:26px;color:var(--text-primary)}
+textarea{width:100%;min-height:88px;border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:12px;font:inherit;font-size:15px;resize:vertical;color:var(--text-primary)}
+textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(102,113,95,.18)}
+input[type=email],input[type=text]{width:100%;height:52px;border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:0 14px;font:inherit;font-size:15px;color:var(--text-primary)}
+input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(102,113,95,.18)}
+.act{display:flex;align-items:flex-start;gap:12px;cursor:pointer}
+.act .box{width:24px;height:24px;border:2px solid var(--secondary);border-radius:7px;flex:0 0 auto;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:.15s}
+.act.done .box{background:var(--success);border-color:var(--success)}
+.act .box svg{width:15px;height:15px;stroke:#fff;stroke-width:3;fill:none;opacity:0;transition:.15s}
+.act.done .box svg{opacity:1}
+.btn{width:100%;height:52px;border:none;border-radius:12px;font:inherit;font-weight:600;font-size:16px;cursor:pointer;transition:.15s}
+.btn-primary{background:#7EA46F;color:#FFFDF8}
+.btn-primary:hover{background:#658F56}
+.btn-primary:active{background:#426D35;color:#FFFDF8;transform:scale(.99)}
+.btn-primary:disabled{background:var(--disabled-bg,#ECE6DB);color:#B5AEA3;cursor:not-allowed}
+.btn-sec{background:transparent;border:1px solid var(--secondary);color:var(--text-primary)}
+.btn-sec:hover{background:var(--surface-muted)}
+.btn-text{background:none;border:none;color:var(--primary);font-weight:600;font-size:15px;cursor:pointer;padding:10px;width:100%}
+.stack-btn{margin-top:6px}
+.streak{display:inline-flex;align-items:center;gap:6px;background:var(--surface-muted);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:600;color:var(--primary)}
+.streak svg{width:18px;height:18px;color:var(--success)}
+.header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.caption{font-size:12px;color:var(--text-muted);text-align:center;margin-top:12px;line-height:18px}
+.leaves{display:flex;gap:8px;margin:14px 0}
+.leaves .lf{width:26px;height:26px;color:var(--border)}
+.leaves .lf.on{color:var(--success)}
+.leaves .lf.today{color:var(--primary)}
+.progress-mini{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:13px;color:var(--text-secondary)}
+.bar{flex:1;height:6px;background:var(--divider);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--secondary)}
+.nav{position:absolute;left:0;right:0;bottom:0;height:64px;background:var(--surface);border-top:1px solid var(--divider);display:flex;justify-content:space-around;align-items:center}
+.nav button{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:var(--text-muted);cursor:pointer}
+.nav button.on{color:var(--primary)}
+.nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7}
+.progress-dots{display:flex;gap:6px}
+.progress-dots i{width:8px;height:8px;border-radius:99px;background:var(--border)}
+.progress-dots i.on{background:var(--primary)}
+.step-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.back{background:none;border:none;font-size:22px;color:var(--text-secondary);cursor:pointer;line-height:1}
+.hero{width:150px;height:150px;margin:24px auto 8px;display:block;color:var(--secondary)}
+.center{text-align:center}
+.sheet{position:absolute;inset:0;background:rgba(64,58,52,.28);display:none;align-items:flex-end;z-index:20}
+.sheet.show{display:flex;animation:fade .2s}
+.sheet-inner{background:var(--surface);width:100%;border-radius:24px 24px 0 0;padding:28px 22px 30px;text-align:center;animation:up .3s ease}
+@keyframes up{from{transform:translateY(40px)}to{transform:none}}
+.wreath{width:96px;height:96px;margin:0 auto 10px;color:var(--success)}
+.locked{opacity:.55;font-size:13px;color:var(--text-muted);margin-top:6px;display:flex;align-items:center;gap:6px}
+.simbar{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:30;background:var(--text-primary);color:#fff;font-size:11px;padding:5px 12px;border-radius:99px;opacity:.55;cursor:pointer;border:none}
+.recap{background:var(--surface-muted);border-radius:12px;padding:14px;text-align:left;font-size:14px;color:var(--text-secondary);line-height:22px;margin:14px 0}
+.note{font-size:11px;color:var(--text-muted);text-align:center;padding:8px 20px 20px}
+.reflect-q{font-family:'Fraunces',serif;font-size:20px;line-height:28px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <button class="simbar" onclick="simulateNextDay()">▶ 다음 날 시뮬레이트 (테스트용)</button>
+
+  <!-- 1. LANDING -->
+  <section class="screen active" id="s-landing">
+    <div class="wordmark"><svg viewBox="0 0 100 100" style="width:22px;height:22px;stroke:#66715F;fill:none;stroke-width:6.5;stroke-linecap:round;stroke-linejoin:round"><path d="M50 22 V80"/><path d="M34 42 H66"/><path d="M50 60 C60 60 66 54 66 44 C56 44 50 50 50 60 Z"/></svg> Grace Companion</div>
+    <div class="h1">Three quiet minutes with God — every day.</div>
+    <div class="sub">Pick how you're feeling. Receive a verse to reflect on, a prayer to start with, and one small act of faith.</div>
+    <div class="section-t">How are you feeling today?</div>
+    <div class="mood-grid" id="landing-moods"></div>
+    <div id="landing-preview" style="display:none;margin-top:16px"></div>
+    <div style="margin-top:18px">
+      <input type="email" id="email" placeholder="your@email.com" oninput="emailCheck()" />
+      <button class="btn btn-primary stack-btn" id="email-btn" disabled onclick="submitEmail()">Begin My 7 Days of Peace</button>
+      <div class="caption">Free · 3 minutes a day. A place to return to.</div>
+    </div>
+  </section>
+
+  <!-- 2. ONBOARDING -->
+  <section class="screen" id="s-onboard">
+    <div class="step-head">
+      <div class="progress-dots" id="ob-dots"><i class="on"></i><i></i><i></i></div>
+      <span class="label" id="ob-step">Step 1 of 3</span>
+    </div>
+    <div id="ob-body"></div>
+  </section>
+
+  <!-- 3. TODAY -->
+  <section class="screen" id="s-today">
+    <div class="header-row">
+      <div>
+        <div class="h2" id="greeting">Good morning.</div>
+        <div class="sub">A quiet moment for today.</div>
+      </div>
+      <div class="streak" id="streak-badge">🌿 <span id="streak-n">0</span></div>
+    </div>
+    <div class="section-t">How are you feeling?</div>
+    <div class="chiprow" id="today-moods"></div>
+    <div id="today-cards" style="margin-top:16px"></div>
+  </section>
+
+  <!-- 4. DAILY GRACE MOMENT (step view) -->
+  <section class="screen" id="s-moment">
+    <div class="step-head">
+      <button class="back" onclick="momentBack()">‹</button>
+      <div class="progress-dots" id="mo-dots"></div>
+      <span class="label" id="mo-step">1 of 4</span>
+    </div>
+    <div id="mo-body"></div>
+  </section>
+
+  <!-- 5. 7 DAYS OF PEACE -->
+  <section class="screen" id="s-challenge">
+    <div class="h1">7 Days of Peace</div>
+    <div class="sub">For a worried, weary heart.</div>
+    <div class="leaves" id="ch-leaves"></div>
+    <div id="ch-body"></div>
+  </section>
+
+  <!-- completion sheet -->
+  <div class="sheet" id="sheet">
+    <div class="sheet-inner">
+      <svg class="wreath" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21c-4-2-7-5-7-9a7 7 0 0 1 14 0c0 4-3 7-7 9Z"/><path d="M12 12c0-2 1-3 3-3M12 15c0-2-1-3-3-3"/></svg>
+      <div class="h2" id="sheet-title">Today's Grace Moment complete 🌿</div>
+      <div class="sub" id="sheet-sub" style="margin:6px 0 18px">Your prayer streak grew.</div>
+      <div class="streak" style="margin-bottom:18px">🌿 <span id="sheet-streak">1</span> day streak</div>
+      <button class="btn btn-primary" onclick="closeSheet()">Return tomorrow</button>
+    </div>
+  </div>
+
+  <!-- bottom nav -->
+  <nav class="nav" id="nav" style="display:none">
+    <button class="on" data-t="today" onclick="nav('today')"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Today</button>
+    <button data-t="journey" onclick="nav('journey')"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10Z"/></svg>Journey</button>
+    <button data-t="challenge" onclick="nav('challenge')"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 8c3 0 7 1 7 5M19 8c-3 0-7 1-7 5"/></svg>Challenges</button>
+    <button data-t="profile" onclick="nav('profile')"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Me</button>
+  </nav>
+</div>
+
+<script>
+// ---------- content (WEB, public domain — 최종 서비스 전 사람이 검수) ----------
+const leafIcons = {
+  Anxious:'<path d="M12 3c-4 3-6 6-6 9a6 6 0 0 0 12 0c0-3-2-6-6-9Z"/><path d="M12 21v-9"/>',
+  Grateful:'<path d="M12 21c-3-4-3-8 0-12 3 4 3 8 0 12Z"/><circle cx="12" cy="6" r="2"/>',
+  Tired:'<path d="M4 8c6 0 10 3 10 9"/><path d="M14 17c0-4 3-6 6-6"/>',
+  Lonely:'<path d="M8 20c0-4 2-7 4-9"/><circle cx="16" cy="7" r="1.6"/>',
+  Hopeful:'<path d="M12 21v-8"/><path d="M12 13c0-3 2-5 5-5-1 3-2 5-5 5Z"/>',
+  Overwhelmed:'<path d="M6 10c4 0 6 3 6 7M18 10c-4 0-6 3-6 7"/><path d="M9 6c3 0 3 3 3 4"/>'
+};
+const moods = {
+  Anxious:{ref:'Philippians 4:6–7',text:'In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God.',key:'You can bring the thing you\'re carrying to God — today, in plain words.',
+    prayer:'A prayer you might start with: "Lord, here is what\'s weighing on me today. I don\'t have it all figured out, but I bring it to You."',
+    q:'What is one worry you could hand over right now?',act:'Take three slow breaths and name one thing you\'ll trust God with today.'},
+  Tired:{ref:'Matthew 11:28',text:'Come to me, all you who labor and are heavily burdened, and I will give you rest.',key:'Rest is an invitation, not a reward you earn.',
+    prayer:'A prayer to begin: "Lord, I\'m tired. Thank You that I don\'t have to carry today alone. Meet me in this quiet moment."',
+    q:'Where do you most need rest today — body, mind, or heart?',act:'Give yourself permission to do one thing slowly today.'},
+  Lonely:{ref:'Psalm 34:18',text:'The LORD is near to those who have a broken heart, and saves those who have a crushed spirit.',key:'Nearness, not distance, is God\'s posture toward you.',
+    prayer:'A prayer to begin: "Lord, I feel alone right now. Would You remind me, quietly, that You are near?"',
+    q:'When did you last feel truly seen? What made it so?',act:'Send a short, honest message to one person you trust.'},
+  Grateful:{ref:'1 Thessalonians 5:16–18',text:'Rejoice always. Pray without ceasing. In everything give thanks, for this is the will of God in Christ Jesus toward you.',key:'Gratitude turns ordinary moments into worship.',
+    prayer:'A prayer to begin: "Thank You, Lord — for this, and for a hundred small things I usually rush past."',
+    q:'What is one small thing you\'re grateful for right now?',act:'Tell one person specifically why you\'re thankful for them.'},
+  Hopeful:{ref:'Jeremiah 29:11',text:'For I know the thoughts that I think toward you, says the LORD, thoughts of peace, and not of evil, to give you hope and a future.',key:'Hope is not wishful thinking; it\'s trust with a direction.',
+    prayer:'A prayer to begin: "Lord, thank You for the hope stirring in me. Help me take one faithful step toward it."',
+    q:'What is one hope you can hold gently before God today?',act:'Write down one small step toward something you\'re hoping for.'},
+  Overwhelmed:{ref:'Psalm 61:2',text:'From the end of the earth, I will call to you when my heart is overwhelmed. Lead me to the rock that is higher than I.',key:'You don\'t have to steady yourself. You can be led.',
+    prayer:'A prayer to begin: "Lord, it\'s all a lot right now. Lead me to steadier ground — one step is enough."',
+    q:'If you could set down just one thing today, what would it be?',act:'Choose the single most important task for today and let the rest wait.'}
+};
+const moodList = Object.keys(moods);
+
+// 7 Days of Peace
+const peace = [
+  {theme:'Bring it to God',ref:'Philippians 4:6–7'},
+  {theme:'Cast your care',ref:'1 Peter 5:7'},
+  {theme:'Rest for the weary',ref:'Matthew 11:28'},
+  {theme:'You are not alone',ref:'Deuteronomy 31:8'},
+  {theme:'A quiet hope',ref:'Psalm 42:11'},
+  {theme:'Trust for tomorrow',ref:'Matthew 6:34'},
+  {theme:'Peace that stays',ref:'John 14:27'}
+];
+
+// ---------- state (in-memory) ----------
+let state = { name:'Friend', streak:0, todayMood:null, todayCompleted:false, peaceDay:0 };
+let step = 0, momentMood=null;
+
+function leafSVG(cls){return `<svg class="lf ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3c-5 4-7 7-7 10a7 7 0 0 0 14 0c0-3-2-6-7-10Z"/><path d="M12 21V8"/></svg>`;}
+function moodChip(m,sel,onclick){return `<button class="chip ${sel?'sel':''}" onclick="${onclick}">
+  <svg viewBox="0 0 24 24">${leafIcons[m]}</svg>${m}</button>`;}
+
+// Refined landing mood selector — one consistent Lucide line-icon system (20px, 1.75, rounded, no fill)
+const lucideMood = {
+  Anxious:'<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/>', // Waves
+  Grateful:'<path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1"/><path d="M15 8a3 3 0 1 1-3 3m3-3h-1m-2 3v-1M9 8a3 3 0 1 0 3 3M9 8h1"/><circle cx="12" cy="8" r="2"/><path d="M12 10v10"/><path d="M12 20c3.3 0 5.5-1.3 5.5-4-3.3 0-5.5 1.3-5.5 4Z"/><path d="M12 20c-3.3 0-5.5-1.3-5.5-4 3.3 0 5.5 1.3 5.5 4Z"/>', // Flower2
+  Tired:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>', // Moon
+  Lonely:'<circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/>', // UserRound
+  Hopeful:'<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8Z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2Z"/>', // Sprout
+  Overwhelmed:'<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>' // Layers
+};
+function landingChip(m,sel){return `<button class="mood-chip ${sel?'sel':''}" onclick="landingPick('${m}')">
+  <svg viewBox="0 0 24 24">${lucideMood[m]}</svg><span>${m}</span></button>`;}
+
+// ---------- landing ----------
+function initLanding(){
+  document.getElementById('landing-moods').innerHTML = moodList.map(m=>landingChip(m,false)).join('');
+}
+function landingPick(m){
+  document.getElementById('landing-moods').innerHTML = moodList.map(x=>landingChip(x,x===m)).join('');
+  const v=moods[m];
+  document.getElementById('landing-preview').style.display='block';
+  document.getElementById('landing-preview').innerHTML=`<div class="card"><div class="label">${v.ref}</div>
+    <div class="verse">${v.text}</div><div class="key">Reflect: ${v.q}</div></div>`;
+}
+function emailCheck(){const ok=/.+@.+\..+/.test(document.getElementById('email').value);document.getElementById('email-btn').disabled=!ok;}
+function submitEmail(){ show('onboard'); renderOnboard(); }
+
+// ---------- onboarding ----------
+function renderOnboard(){
+  const dots=['','',''].map((_,i)=>`<i class="${i<=step?'on':''}"></i>`).join('');
+  document.getElementById('ob-dots').innerHTML=dots;
+  document.getElementById('ob-step').textContent=`Step ${step+1} of 3`;
+  const b=document.getElementById('ob-body');
+  if(step===0){
+    b.innerHTML=`<svg class="hero" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 22c-6-3-9-7-9-12a9 9 0 0 1 18 0c0 5-3 9-9 12Z"/><path d="M12 22V9M12 12c0-3 2-4 5-4M12 15c0-3-2-4-5-4"/></svg>
+      <div class="h1 center">A quiet place to return to each day.</div>
+      <div class="sub center" style="margin:8px 4px 0">Build a gentle rhythm of prayer, reflection, and gratitude.</div>
+      <button class="btn btn-primary" style="margin-top:26px" onclick="obNext()">Get started</button>`;
+  } else if(step===1){
+    b.innerHTML=`<div class="h2">What should we call you?</div>
+      <input type="text" id="ob-name" placeholder="Sarah" style="margin:10px 0 18px" />
+      <div class="h2">Where do you want to grow?</div>
+      <div class="chips" id="ob-focus" style="margin-top:10px">
+        ${['Peace','Prayer','Gratitude','Relationships','Patience','Renewal'].map(f=>`<button class="chip" onclick="this.classList.toggle('sel')">${f}</button>`).join('')}</div>
+      <button class="btn btn-primary" style="margin-top:24px" onclick="obNext()">Continue</button>`;
+  } else {
+    b.innerHTML=`<div class="h2">How much time feels doable?</div>
+      <div class="chips" id="ob-time" style="margin-top:12px">
+        ${['2 min','5 min','10 min'].map((t,i)=>`<button class="chip ${i===1?'sel':''}" onclick="pickOne(this,'ob-time')">${t}</button>`).join('')}</div>
+      <div class="sub" style="margin-top:20px">You're all set. Let's begin with today.</div>
+      <button class="btn btn-primary" style="margin-top:20px" onclick="finishOnboard()">Begin today</button>`;
+  }
+}
+function pickOne(el,id){document.querySelectorAll('#'+id+' .chip').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function obNext(){ if(step===1){const n=document.getElementById('ob-name').value.trim(); if(n) state.name=n;} step++; renderOnboard(); }
+function finishOnboard(){ step=0; startApp(); }
+
+// ---------- today ----------
+function startApp(){ document.getElementById('nav').style.display='flex'; nav('today'); }
+function renderToday(){
+  const hr=new Date().getHours();
+  const greet = hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+  document.getElementById('greeting').textContent=`${greet}, ${state.name}.`;
+  document.getElementById('streak-n').textContent=state.streak;
+  document.getElementById('today-moods').innerHTML=moodList.map(m=>moodChip(m,m===state.todayMood,`todayPick('${m}')`)).join('');
+  const wrap=document.getElementById('today-cards');
+  if(state.todayCompleted){
+    wrap.innerHTML=`<div class="card center"><svg class="wreath" style="width:64px;height:64px" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.4"><path d="M20 6 9 17l-5-5"/></svg>
+      <div class="h2">Today's moment is complete 🌿</div><div class="sub" style="margin-top:6px">Come back tomorrow for a new one.</div></div>
+      ${challengeMiniCard()}`;
+    return;
+  }
+  if(!state.todayMood){
+    wrap.innerHTML=`<div class="card"><div class="sub">Pick how you're feeling to begin today's moment.</div></div>${challengeMiniCard()}`;
+    return;
+  }
+  const v=moods[state.todayMood];
+  wrap.innerHTML=`
+    <div class="card"><svg class="leaf-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3c-5 4-7 7-7 10a7 7 0 0 0 14 0c0-3-2-6-7-10Z"/></svg>
+      <div class="label">${v.ref}</div><div class="verse">${v.text}</div><div class="divider"></div>
+      <div class="key"><b style="color:var(--text-primary)">Key:</b> ${v.key}</div></div>
+    <div class="card"><div class="label">A prayer to begin</div><div class="prayer" style="margin-top:8px">${v.prayer}</div></div>
+    <button class="btn btn-primary" onclick="openMoment('${state.todayMood}')">Begin Today's Grace Moment</button>
+    <div style="height:14px"></div>${challengeMiniCard()}`;
+}
+function challengeMiniCard(){
+  const d=state.peaceDay, pct=Math.round(d/7*100);
+  return `<div class="card" onclick="nav('challenge')" style="cursor:pointer"><div class="label">7 Days of Peace</div>
+    <div class="progress-mini"><div class="bar"><i style="width:${pct}%"></i></div><span>${d}/7</span></div></div>`;
+}
+function todayPick(m){ state.todayMood=m; renderToday(); }
+
+// ---------- daily grace moment (step view) ----------
+function openMoment(m){ momentMood=m; step=0; show('moment'); renderMoment(); }
+function renderMoment(){
+  const v=moods[momentMood];
+  const steps=['verse','reflect','act','done'];
+  document.getElementById('mo-dots').innerHTML=steps.map((_,i)=>`<i class="${i<=step?'on':''}"></i>`).join('');
+  document.getElementById('mo-step').textContent=`${Math.min(step+1,4)} of 4`;
+  const b=document.getElementById('mo-body');
+  if(step===0){
+    b.innerHTML=`<div class="card"><div class="label">${v.ref}</div><div class="verse">${v.text}</div>
+      <div class="divider"></div><div class="key">${v.key}</div></div>
+      <div class="card"><div class="label">A prayer to begin</div><div class="prayer" style="margin-top:8px">${v.prayer}</div></div>
+      <button class="btn btn-primary" onclick="moStep(1)">Continue</button>`;
+  } else if(step===1){
+    b.innerHTML=`<div class="reflect-q">${v.q}</div>
+      <textarea id="mo-reflect" placeholder="Write a few words… (just for you)"></textarea>
+      <button class="btn btn-primary" style="margin-top:16px" onclick="moStep(2)">Continue</button>
+      <button class="btn-text" onclick="moStep(2)">Skip for now</button>`;
+  } else if(step===2){
+    b.innerHTML=`<div class="reflect-q">One small act of faith</div>
+      <div class="card"><div class="act" id="mo-act" onclick="this.classList.toggle('done')">
+        <span class="box"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <span class="prayer">${v.act}</span></div></div>
+      <button class="btn btn-primary" onclick="completeMoment()">Complete Today</button>`;
+  }
+}
+function moStep(n){ step=n; renderMoment(); }
+function momentBack(){ if(step>0){step--; renderMoment();} else { show('today'); renderToday(); } }
+function completeMoment(){
+  if(!state.todayCompleted){ state.streak++; state.todayCompleted=true; }
+  document.getElementById('sheet-title').textContent="Today's Grace Moment complete 🌿";
+  document.getElementById('sheet-sub').textContent='Every quiet moment counts. Your streak grew.';
+  document.getElementById('sheet-streak').textContent=state.streak;
+  document.getElementById('sheet').classList.add('show');
+}
+function closeSheet(){ document.getElementById('sheet').classList.remove('show'); show('today'); nav('today'); }
+
+// ---------- challenge ----------
+function renderChallenge(){
+  const d=state.peaceDay;
+  document.getElementById('ch-leaves').innerHTML = peace.map((_,i)=>{
+    let cls = i<d?'on':(i===d?'today':''); return leafSVG(cls);
+  }).join('');
+  const b=document.getElementById('ch-body');
+  if(d>=7){
+    b.innerHTML=`<div class="card center"><svg class="wreath" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.3"><path d="M12 21c-4-2-7-5-7-9a7 7 0 0 1 14 0c0 4-3 7-7 9Z"/><path d="M12 12c0-2 1-3 3-3M12 15c0-2-1-3-3-3"/></svg>
+      <div class="h1">You've completed 7 Days of Peace 🌿</div>
+      <div class="sub" style="margin-top:6px">7 quiet moments. Well done.</div>
+      <div class="recap">"A moment worth remembering." Your reflections from this week are saved here.</div>
+      <button class="btn btn-primary" onclick="alert('Grace Reflection PDF — 실제 앱에서 다운로드 제공')">Download Grace Reflection PDF</button>
+      <div class="caption">Your next challenge is coming soon.</div></div>`;
+    return;
+  }
+  const day=peace[d];
+  b.innerHTML=`<div class="card"><div class="label">Day ${d+1} · ${day.theme}</div>
+    <div class="sub" style="margin:8px 0 14px">Today's verse to reflect on: <b>${day.ref}</b>. A 2-minute prayer, one question, one small act.</div>
+    <button class="btn btn-primary" onclick="completePeaceDay()">Start Day ${d+1}</button></div>
+    <div class="locked">🔒 Day ${Math.min(d+2,7)} opens tomorrow</div>`;
+}
+function completePeaceDay(){
+  if(state.peaceDay<7) state.peaceDay++;
+  if(!state.todayCompleted){ state.streak++; state.todayCompleted=true; }
+  document.getElementById('sheet-title').textContent = state.peaceDay>=7 ? 'You finished 7 Days of Peace 🌿' : `Day ${state.peaceDay} complete 🌿`;
+  document.getElementById('sheet-sub').textContent='Grace meets you here again.';
+  document.getElementById('sheet-streak').textContent=state.streak;
+  document.getElementById('sheet').classList.add('show');
+}
+
+// ---------- nav / router ----------
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById('s-'+id).classList.add('active'); }
+function nav(t){
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  if(t==='today'){ show('today'); renderToday(); }
+  else if(t==='challenge'){ show('challenge'); renderChallenge(); }
+  else if(t==='journey'){ show('today'); renderToday(); toast('Prayer Journey — 다음 버전에서 추가'); }
+  else if(t==='profile'){ show('today'); renderToday(); toast('Profile — 다음 버전에서 추가'); }
+}
+function toast(msg){ const t=document.createElement('div'); t.textContent=msg;
+  t.style.cssText='position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:var(--text-primary);color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;z-index:40;box-shadow:0 6px 18px rgba(0,0,0,.2)';
+  document.getElementById('phone').appendChild(t); setTimeout(()=>t.remove(),1800); }
+
+// 다음 날 시뮬레이트: 완료 상태 리셋, streak 유지, 감정 초기화
+function simulateNextDay(){
+  state.todayCompleted=false; state.todayMood=null;
+  const cur=document.querySelector('.screen.active').id;
+  if(cur==='s-challenge') renderChallenge(); else { nav('today'); }
+  toast('새로운 하루 🌿 다시 돌아오셨어요');
+}
+
+initLanding();
+</script>
+<div class="note" style="max-width:420px;margin:0 auto">Prototype · 말씀 텍스트는 퍼블릭도메인(WEB/일부) 기준이며 최종 서비스 전 사람이 정확성을 검수합니다.</div>
+</body>
+</html>

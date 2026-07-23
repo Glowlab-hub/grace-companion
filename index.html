@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><g fill="none" stroke="%2366715F" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"><path d="M50 22V80"/><path d="M34 42H66"/><path d="M50 60C60 60 66 54 66 44 56 44 50 50 50 60Z"/></g></svg>' />
+<title>Grace Companion — Three quiet minutes with God, every day</title>
+<meta name="description" content="Pick how you're feeling and receive a verse to reflect on, a prayer to begin, and one small act of faith. Start your free 7 Days of Peace." />
+<meta property="og:title" content="Grace Companion — Three quiet minutes with God" />
+<meta property="og:description" content="A gentle daily rhythm of prayer, reflection, and gratitude for Christian women. Start your free 7 Days of Peace." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --background:#F7F3EA; --surface:#FFFDF8; --surface-muted:#F1EBDF;
+  --primary:#7EA46F; --primary-hover:#658F56; --primary-pressed:#426D35; --primary-light:#DDE4D9;
+  --secondary:#9BA895; --accent:#C98F72;
+  --text-primary:#403A34; --text-secondary:#6F6861; --text-muted:#9A9187;
+  --border:#DDD5C9; --divider:#E7E0D4; --success:#6F8A68;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--background);color:var(--text-primary);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+body{display:flex;justify-content:center;min-height:100vh;padding:0}
+.wrap{width:100%;max-width:480px;padding:28px 22px 40px;display:flex;flex-direction:column;min-height:100vh}
+.wordmark{display:flex;align-items:center;gap:8px;font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:var(--primary-hover);margin-bottom:26px}
+.wordmark svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.h1{font-family:'Fraunces',serif;font-weight:600;font-size:30px;line-height:37px;letter-spacing:-.4px;margin-bottom:10px}
+.sub{color:var(--text-secondary);font-size:16px;line-height:24px}
+.section-t{font-family:'Fraunces',serif;font-weight:600;font-size:19px;margin:26px 0 14px}
+.mood-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mood-chip{display:flex;align-items:center;gap:12px;height:54px;padding:0 16px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border);color:var(--text-secondary);font:inherit;font-size:15px;font-weight:500;
+  text-align:left;cursor:pointer;transition:.15s}
+.mood-chip svg{width:20px;height:20px;stroke:#8B857D;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.mood-chip:hover{background:var(--surface-muted)}
+.mood-chip.sel{background:#DDE4D9;border-color:#66715F;color:#403A34}
+.mood-chip.sel svg{stroke:#596653}
+.card{background:var(--surface);border-radius:16px;padding:20px;box-shadow:0 4px 12px rgba(64,58,52,.08);margin-top:16px;position:relative;overflow:hidden}
+.label{font-size:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;color:var(--text-muted)}
+.verse{font-family:'Fraunces',serif;font-style:italic;font-size:20px;line-height:32px;border-left:2px solid var(--secondary);padding-left:14px;margin:10px 0}
+.key{font-size:15px;color:var(--text-secondary);line-height:22px}
+.leaf-accent{position:absolute;right:-8px;top:-10px;width:64px;height:64px;opacity:.14;color:var(--secondary);pointer-events:none}
+form{margin-top:22px}
+input[type=email]{width:100%;height:54px;border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:0 16px;font:inherit;font-size:15px;color:var(--text-primary)}
+input[type=email]:focus{outline:none;border-color:var(--primary-hover);box-shadow:0 0 0 3px rgba(101,143,86,.18)}
+.btn{width:100%;height:54px;border:1px solid transparent;border-radius:12px;font:inherit;font-weight:600;font-size:16px;margin-top:10px;transition:.15s}
+#cta{background:#E8E1D5;color:#A49C91;cursor:not-allowed}
+#cta:enabled{background:#A9B8A3;color:#2F3A2D;border-color:#879B81;cursor:pointer}
+#cta:enabled:hover{background:#98AA92}
+#cta:enabled:active{background:#879B81;color:#FFFDF8}
+.caption{font-size:12px;color:var(--text-muted);text-align:center;margin-top:12px;line-height:18px}
+.bonus{margin-top:22px;font-size:14px;color:var(--text-secondary);line-height:22px}
+.bonus b{color:var(--text-primary)}
+.success{display:none;text-align:center;padding:30px 10px}
+.success svg{width:72px;height:72px;color:var(--success);margin-bottom:14px}
+.success .h1{font-size:26px;line-height:32px}
+.footer{margin-top:auto;padding-top:32px;text-align:center}
+.footer .disc{font-size:11px;color:var(--text-muted);line-height:17px;margin-bottom:8px}
+.footer .brand{font-size:12px;color:var(--text-muted)}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid rgba(47,58,45,.3);border-top-color:#2F3A2D;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-3px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="wordmark">
+    <svg viewBox="0 0 100 100" style="stroke-width:6.5"><path d="M50 22 V80"/><path d="M34 42 H66"/><path d="M50 60 C60 60 66 54 66 44 C56 44 50 50 50 60 Z"/></svg>
+    Grace Companion
+  </div>
+
+  <div id="main">
+    <div class="h1">Three quiet minutes with God — every day.</div>
+    <div class="sub">Pick how you're feeling. Receive a verse to reflect on, a prayer to begin with, and one small act of faith. Your journey builds day by day.</div>
+
+    <div class="section-t">How are you feeling today?</div>
+    <div class="mood-grid" id="moods"></div>
+
+    <div id="preview"></div>
+
+    <!-- ⬇⬇⬇ KIT 연결: action의 REPLACE_FORM_ID 를 당신의 Kit 폼 ID로 교체하세요 (안내서 참고) ⬇⬇⬇ -->
+    <form id="signup"
+          action="https://app.kit.com/forms/REPLACE_FORM_ID/subscriptions"
+          method="post" target="kit_iframe">
+      <input type="email" id="email" name="email_address" placeholder="your@email.com" required />
+      <input type="hidden" name="fields[mood]" id="mood-field" />
+      <button type="submit" class="btn" id="cta" disabled>Begin My 7 Days of Peace</button>
+      <div class="caption">Free · 3 minutes a day. A quiet place to return to.</div>
+    </form>
+    <iframe id="kit_iframe" name="kit_iframe" style="display:none" title="signup"></iframe>
+
+    <div class="bonus">
+      When you begin, you'll get a gentle <b>7-day prayer journey</b> in your inbox, plus a free <b>Prayer Reflection PDF</b> to keep.
+    </div>
+  </div>
+
+  <div class="success" id="success">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 21c-4-2-7-5-7-9a7 7 0 0 1 14 0c0 4-3 7-7 9Z"/><path d="M12 12c0-2 1-3 3-3M12 15c0-2-1-3-3-3"/></svg>
+    <div class="h1">Check your inbox 🌿</div>
+    <div class="sub" style="margin-top:8px">Your 7 Days of Peace is on the way. Open the first email to begin, and please confirm your address if we ask.</div>
+  </div>
+
+  <div class="footer">
+    <div class="disc">Grace Companion offers reflection and prayer prompts. It is not a substitute for pastoral care, medical, legal, or professional advice. If you are in crisis, please reach out to local emergency services or a trusted professional.</div>
+    <div class="brand">🌿 A LeeneCo project · <a href="#" style="color:var(--text-muted)">Privacy</a></div>
+  </div>
+</div>
+
+<script>
+const moods = {
+  Anxious:{ref:'Philippians 4:6–7',text:'In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God.',q:'What is one worry you could hand over right now?',
+    icon:'<path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 1.3 0 1.9-.5 2.5-1"/>'},
+  Grateful:{ref:'1 Thessalonians 5:16–18',text:'Rejoice always. Pray without ceasing. In everything give thanks, for this is the will of God in Christ Jesus toward you.',q:'What is one small thing you\'re grateful for right now?',
+    icon:'<path d="M12 5a3 3 0 1 1 3 3m-3-3a3 3 0 1 0-3 3m3-3v1"/><path d="M15 8a3 3 0 1 1-3 3m3-3h-1m-2 3v-1M9 8a3 3 0 1 0 3 3M9 8h1"/><circle cx="12" cy="8" r="2"/><path d="M12 10v10"/><path d="M12 20c3.3 0 5.5-1.3 5.5-4-3.3 0-5.5 1.3-5.5 4Z"/><path d="M12 20c-3.3 0-5.5-1.3-5.5-4 3.3 0 5.5 1.3 5.5 4Z"/>'},
+  Tired:{ref:'Matthew 11:28',text:'Come to me, all you who labor and are heavily burdened, and I will give you rest.',q:'Where do you most need rest today — body, mind, or heart?',
+    icon:'<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'},
+  Lonely:{ref:'Psalm 34:18',text:'The LORD is near to those who have a broken heart, and saves those who have a crushed spirit.',q:'When did you last feel truly seen?',
+    icon:'<circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/>'},
+  Hopeful:{ref:'Jeremiah 29:11',text:'For I know the thoughts that I think toward you, says the LORD, thoughts of peace, and not of evil, to give you hope and a future.',q:'What hope can you hold gently before God today?',
+    icon:'<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8Z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2Z"/>'},
+  Overwhelmed:{ref:'Psalm 61:2',text:'From the end of the earth, I will call to you when my heart is overwhelmed. Lead me to the rock that is higher than I.',q:'If you could set down one thing today, what would it be?',
+    icon:'<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>'}
+};
+const list = Object.keys(moods);
+let selected = null;
+
+function render(){
+  document.getElementById('moods').innerHTML = list.map(m=>`
+    <button type="button" class="mood-chip ${m===selected?'sel':''}" onclick="pick('${m}')">
+      <svg viewBox="0 0 24 24">${moods[m].icon}</svg><span>${m}</span></button>`).join('');
+}
+function pick(m){
+  selected = m; render();
+  const v = moods[m];
+  document.getElementById('preview').innerHTML = `<div class="card">
+    <svg class="leaf-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 3c-5 4-7 7-7 10a7 7 0 0 0 14 0c0-3-2-6-7-10Z"/></svg>
+    <div class="label">${v.ref}</div><div class="verse">${v.text}</div>
+    <div class="key">Reflect: ${v.q}</div></div>`;
+  document.getElementById('mood-field').value = m;
+  emailCheck();
+}
+function emailCheck(){
+  const ok = /.+@.+\..+/.test(document.getElementById('email').value);
+  document.getElementById('cta').disabled = !(ok && selected);
+}
+document.getElementById('email').addEventListener('input', emailCheck);
+
+const form = document.getElementById('signup');
+const iframe = document.getElementById('kit_iframe');
+const ctaBtn = document.getElementById('cta');
+let submitting = false, submitTimer = null;
+
+function showError(msg){
+  submitting = false;
+  ctaBtn.innerHTML = 'Begin My 7 Days of Peace';
+  ctaBtn.disabled = false;
+  let box = document.getElementById('errbox');
+  if(!box){
+    box = document.createElement('div');
+    box.id = 'errbox';
+    box.style.cssText = 'margin-top:12px;font-size:14px;color:#A76C65;text-align:center;line-height:20px';
+    form.appendChild(box);
+  }
+  box.textContent = msg || "We couldn't send that just now. Please check your connection and tap the button to try again.";
+}
+
+form.addEventListener('submit', function(e){
+  // 폼 ID가 아직 교체되지 않았으면 전송 막고 안내
+  if(form.action.indexOf('REPLACE_FORM_ID') !== -1){
+    e.preventDefault();
+    showError("This form isn't connected yet. (Kit form ID missing.)");
+    return;
+  }
+  const errbox = document.getElementById('errbox'); if(errbox) errbox.textContent = '';
+  submitting = true;
+  ctaBtn.disabled = true;
+  ctaBtn.innerHTML = '<span class="spin"></span>';
+  clearTimeout(submitTimer);
+  // Kit 응답이 일정 시간 내 안 오면 실패로 간주 → 재시도 안내
+  submitTimer = setTimeout(function(){ if(submitting) showError(); }, 9000);
+  // 폼은 hidden iframe으로 실제 전송됨 → 응답 도착(iframe load) 시 성공 처리
+});
+
+// Kit 응답이 iframe에 로드되면(=전송 완료) 성공 화면 표시
+iframe.addEventListener('load', function(){
+  if(!submitting) return;            // 최초 about:blank 로드는 무시
+  submitting = false;
+  clearTimeout(submitTimer);
+  document.getElementById('main').style.display = 'none';
+  document.getElementById('success').style.display = 'block';
+});
+
+render();
+</script>
+</body>
+</html>
