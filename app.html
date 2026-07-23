@@ -100,7 +100,8 @@ input:focus,textarea:focus{outline:none;border-color:var(--primary-hover);box-sh
 
   <!-- ONBOARDING -->
   <section class="screen" id="s-onb">
-    <svg class="hero" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 22c-6-3-9-7-9-12a9 9 0 0 1 18 0c0 5-3 9-9 12Z"/><path d="M12 22V9M12 12c0-3 2-4 5-4M12 15c0-3-2-4-5-4"/></svg>
+    <div style="padding-top:64px"></div>
+    <div class="wordmark center" style="margin-bottom:20px">Grace Companion</div>
     <div class="h1 center">A quiet place to return to.</div>
     <div class="sub center" style="margin:6px 6px 20px">What should we call you?</div>
     <input type="text" id="onb-name" placeholder="Sarah" />
@@ -276,7 +277,17 @@ async function renderJourney(){
   const {data:prayers}=await sb.from('prayer_requests').select('*').eq('user_id',USER.id).order('created_at',{ascending:false});
   const colors={praying:'#9BA895',waiting:'#AAB9BE',answered:'#6F8A68',changed:'#D5AAA4',archived:'#C9C2B6'};
   let h=`<div class="h1">Prayer Journey</div><div class="sub">Bring your requests here and watch how God moves.</div>
-    <button class="btn btn-primary" style="margin-top:16px" onclick="newPrayer()">+ New prayer</button><div style="margin-top:16px">`;
+    <button class="btn btn-primary" style="margin-top:16px" onclick="toggleNP(true)">+ New prayer</button>
+    <div class="card" id="np-form" style="display:none;margin-top:12px">
+      <div class="label">New prayer</div>
+      <input type="text" id="np-title" placeholder="What would you like to pray about?" style="margin:8px 0"/>
+      <textarea id="np-detail" placeholder="A little more (optional)"></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn btn-primary" style="height:44px" onclick="saveNewPrayer()">Save</button>
+        <button class="btn btn-sec" style="height:44px" onclick="toggleNP(false)">Cancel</button>
+      </div>
+    </div>
+    <div style="margin-top:16px">`;
   if(!prayers||!prayers.length){ h+=`<div class="card center"><div style="font-size:26px">🌿</div><div class="sub" style="margin-top:6px">No prayers yet. Add the first thing on your heart.</div></div>`; }
   else prayers.forEach(p=>{
     h+=`<button class="pr-card" onclick="openPrayer('${p.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-family:Fraunces,serif;font-size:17px">${esc(p.title)}</b>
@@ -287,9 +298,11 @@ async function renderJourney(){
   h+='</div>'; document.getElementById('s-journey').innerHTML=h;
 }
 function esc(s){return (s||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
-async function newPrayer(){
-  const title=prompt('What would you like to pray about?'); if(!title) return;
-  await sb.from('prayer_requests').insert({user_id:USER.id,title,status:'praying'});
+function toggleNP(v){const f=document.getElementById('np-form');if(f)f.style.display=v?'block':'none';}
+async function saveNewPrayer(){
+  const title=document.getElementById('np-title').value.trim(); if(!title){toast('Add a title 🌿');return;}
+  const detail=document.getElementById('np-detail').value.trim()||null;
+  await sb.from('prayer_requests').insert({user_id:USER.id,title,detail,status:'praying'});
   renderJourney();
 }
 async function openPrayer(id){
@@ -305,12 +318,14 @@ async function openPrayer(id){
     <button class="btn-text" style="text-align:left" onclick="saveAnswer('${id}')">Save reflection</button></div>`; }
   h+=`<div class="section-t">Updates</div>`;
   (updates||[]).forEach(u=>h+=`<div class="card"><div class="prayer">${esc(u.note)}</div><div class="small" style="margin-top:6px">${new Date(u.created_at).toLocaleDateString()}</div></div>`);
-  h+=`<button class="btn btn-sec" onclick="addUpdate('${id}')">+ Add a note</button>`;
+  h+=`<div class="card"><div class="label">Add a note</div>
+      <textarea id="pu-note" placeholder="A short update on this prayer…"></textarea>
+      <button class="btn btn-primary" style="height:44px;margin-top:10px" onclick="saveUpdate('${id}')">Save note</button></div>`;
   document.getElementById('s-journey').innerHTML=h;
 }
 async function setStatus(id,s){ const patch={status:s}; if(s==='answered')patch.answered_at=new Date().toISOString(); await sb.from('prayer_requests').update(patch).eq('id',id); openPrayer(id); }
 async function saveAnswer(id){ const t=document.getElementById('pr-answer').value; await sb.from('prayer_requests').update({answer_note:t}).eq('id',id); toast('Saved 🌿'); }
-async function addUpdate(id){ const note=prompt('Add a note to this prayer:'); if(!note)return; await sb.from('prayer_updates').insert({prayer_id:id,user_id:USER.id,note}); openPrayer(id); }
+async function saveUpdate(id){ const el=document.getElementById('pu-note'); const note=(el?el.value:'').trim(); if(!note){toast('Write a note 🌿');return;} await sb.from('prayer_updates').insert({prayer_id:id,user_id:USER.id,note}); openPrayer(id); }
 
 // ---------- GRATITUDE ----------
 async function renderGrat(){
@@ -375,7 +390,7 @@ function nav(t){
   if(t==='today')renderToday(); else if(t==='journey')renderJourney(); else if(t==='grat')renderGrat(); else if(t==='chal')renderChal();
 }
 window.todayPick=todayPick;window.openMoment=openMoment;window.momentBack=momentBack;window.completeMoment=completeMoment;
-window.nav=nav;window.newPrayer=newPrayer;window.openPrayer=openPrayer;window.setStatus=setStatus;window.saveAnswer=saveAnswer;window.addUpdate=addUpdate;window.saveGrat=saveGrat;window.completeChalDay=completeChalDay;window.saveRef=saveRef;
+window.nav=nav;window.toggleNP=toggleNP;window.saveNewPrayer=saveNewPrayer;window.openPrayer=openPrayer;window.setStatus=setStatus;window.saveAnswer=saveAnswer;window.saveUpdate=saveUpdate;window.saveGrat=saveGrat;window.completeChalDay=completeChalDay;window.saveRef=saveRef;
 </script>
 </body>
 </html>
